@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">DBReader_ver1</string>
+    <string name="listenButton">Listen</string>
+    <string name="stopButton">Stop</string>
+</resources>
