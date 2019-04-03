@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
     // display the DB level in the textView 'dbText'.
     public void updateTv(){
-        dbText.setText(Double.toString((getAmplitudeEMA())) + " dB");
+        dbText.setText(Double.toString((soundDb())) + " dB");
     }
 
     // stops the media recorder. This iss linked to the stop button.
@@ -126,20 +126,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // The bottom 3 methods are used to calculate the DB levels but I'm not sure where the soundDb method needs to be called.
-    public double soundDb(double ampl){
-        return  20 * Math.log10(getAmplitudeEMA() / ampl);
+    // This calculation was derived from this link: https://stackoverflow.com/questions/10655703/what-does-androids-getmaxamplitude-function-for-the-mediarecorder-actually-gi
+    // We are reading sound from the device using the MediaRecorder's 'getMaxAmplitude' method. The return of this method is explain in the link above as well.
+    public double soundDb(){
+
+        double pressure = getAmplitudeEMA()/51805.5336;
+        double amp1 = 0.00002;
+        return  20 * Math.log10(pressure / amp1);
     }
+
     public double getAmplitude() {
         if (mRecorder != null)
             return  (mRecorder.getMaxAmplitude());
         else
             return 0;
-
     }
+
+    // I commented out the sound filter that was originally part fo the calculation. Not sure if we need it, but it didn't change the data as much with or without it.
     public double getAmplitudeEMA() {
         double amp =  getAmplitude();
-        mEMA = EMA_FILTER * amp + (1.0 - EMA_FILTER) * mEMA;
-        return mEMA;
+        //mEMA = EMA_FILTER * amp + (1.0 - EMA_FILTER) * mEMA;
+        return amp;
     }
 }
