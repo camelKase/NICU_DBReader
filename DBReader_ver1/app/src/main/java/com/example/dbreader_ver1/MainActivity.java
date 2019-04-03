@@ -14,8 +14,6 @@ public class MainActivity extends AppCompatActivity {
     Button listenButton, stopButton;
     TextView dbText;
     MediaRecorder mRecorder;
-    private static double mEMA = 0.0;
-    static final private double EMA_FILTER = 0.6;
     Thread runner;
 
     final Runnable updater = new Runnable(){
@@ -132,7 +130,10 @@ public class MainActivity extends AppCompatActivity {
 
         double pressure = getAmplitudeEMA()/51805.5336;
         double amp1 = 0.00002;
-        return  20 * Math.log10(pressure / amp1);
+
+        // Subtracting the db value by 15 to make it more accurate.
+        return  20 * Math.log10(pressure / amp1) - 15.0;
+
     }
 
     public double getAmplitude() {
@@ -145,7 +146,6 @@ public class MainActivity extends AppCompatActivity {
     // I commented out the sound filter that was originally part fo the calculation. Not sure if we need it, but it didn't change the data as much with or without it.
     public double getAmplitudeEMA() {
         double amp =  getAmplitude();
-        //mEMA = EMA_FILTER * amp + (1.0 - EMA_FILTER) * mEMA;
         return amp;
     }
 }
