@@ -1,6 +1,10 @@
 package com.example.dbreader_ver1;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.util.Log;
 import android.os.Handler;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,11 +28,14 @@ public class MainActivity extends AppCompatActivity {
         };
     };
     final Handler mHandler = new Handler();
+    private final int MY_PERMISSIONS_RECORD_AUDIO = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
+        requestAudioPermissions();
 
         //listenButton = (Button) findViewById(R.id.listenButton);
         //stopButton = (Button) findViewById(R.id.stopButton);
@@ -71,7 +79,61 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void onResume()
+    // Method to request permission for mic recording
+    public void requestAudioPermissions() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            //When permission is not granted by user, show them message why this permission is needed.
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.RECORD_AUDIO)) {
+                Toast.makeText(this, "Please grant permissions to record audio", Toast.LENGTH_LONG).show();
+
+                //Give user option to still opt-in the permissions
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.RECORD_AUDIO},
+                        MY_PERMISSIONS_RECORD_AUDIO);
+
+            } else {
+                // Show user dialog to grant permission to record audio
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.RECORD_AUDIO},
+                        MY_PERMISSIONS_RECORD_AUDIO);
+            }
+        }
+        //If permission is granted, then go ahead recording audio
+        else if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.RECORD_AUDIO)
+                == PackageManager.PERMISSION_GRANTED) {
+
+            //Go ahead with recording audio now
+            startRecording();
+        }
+    }
+
+    //Handling callback for permission request
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_RECORD_AUDIO: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay!
+                    startRecording();
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(this, "Permissions Denied to record audio", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+        }
+    }
+
+    // These methods are used to pause and resume the recorder which is a WIP. Currently they cause the app to crash so they are commented.
+    /*public void onResume()
     {
         super.onResume();
         startRecording();
@@ -82,6 +144,9 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         stopRecorder();
     }
+    */
+
+
 
     // Initializes media recorder and starts recording.
     private void startRecording() {
@@ -115,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
         dbText.setText(Double.toString((soundDb())) + " dB");
     }
 
-    // stops the media recorder. This iss linked to the stop button.
+    // stops the media recorder. This is linked to the stop button that is currently not implemented.
     public void stopRecorder() {
         if (mRecorder != null) {
             mRecorder.stop();
@@ -130,9 +195,7 @@ public class MainActivity extends AppCompatActivity {
 
         double pressure = getAmplitudeEMA()/51805.5336;
         double amp1 = 0.00002;
-
-        // Subtracting the db value by 15 to make it more accurate.
-        return  20 * Math.log10(pressure / amp1) - 15.0;
+        return  20 * Math.log10(pressure / amp1);
 
     }
 
