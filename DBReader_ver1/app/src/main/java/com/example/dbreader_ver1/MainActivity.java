@@ -1,10 +1,15 @@
 package com.example.dbreader_ver1;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,11 +25,13 @@ public class MainActivity extends AppCompatActivity {
     TextView dbText;
     MediaRecorder mRecorder;
     Thread runner;
-
+    public boolean alertActive = false;
     final Runnable updater = new Runnable(){
 
         public void run(){
             updateTv();
+            //checkDb(soundDb());
+
         };
     };
     final Handler mHandler = new Handler();
@@ -35,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
         requestAudioPermissions();
 
         //listenButton = (Button) findViewById(R.id.listenButton);
@@ -195,7 +203,10 @@ public class MainActivity extends AppCompatActivity {
 
         double pressure = getAmplitudeEMA()/51805.5336;
         double amp1 = 0.00002;
-        return  20 * Math.log10(pressure / amp1);
+        double Db = 20 * Math.log10(pressure / amp1);
+        if (Db > 50 && alertActive == false)
+            tripAlarm();
+        return  Db;
 
     }
 
@@ -210,5 +221,39 @@ public class MainActivity extends AppCompatActivity {
     public double getAmplitudeEMA() {
         double amp =  getAmplitude();
         return amp;
+    }
+
+    public void checkDb(double Db){
+        double currentDb = Db;
+        double maxDb = 50.0;
+        if (currentDb > maxDb)
+            tripAlarm();
+
+
+    }
+    public void tripAlarm(){
+        alertActive = true;
+//        if (Build.VERSION.SDK_INT >= 26) {
+//            ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(150, VibrationEffect.DEFAULT_AMPLITUDE));
+//        }else {
+//            ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(150);
+//        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+        builder.setCancelable(false);
+        builder.setTitle("Sound Levels Are Too High");
+        builder.setMessage(Double.toString((soundDb())) + " dB");
+
+
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+               // alertTextView.setVisibility(View.VISIBLE);
+                alertActive = false;
+            }
+        });
+        builder.show();
+
     }
 }
