@@ -2,4 +2,7 @@
     <string name="app_name">DBReader_ver1</string>
     <string name="listenButton">Listen</string>
     <string name="stopButton">Stop</string>
+    <string name="enter_minimum_level">Enter Minimum Level</string>
+    <string name="back">back</string>
+    <string name="save">save</string>
 </resources>
