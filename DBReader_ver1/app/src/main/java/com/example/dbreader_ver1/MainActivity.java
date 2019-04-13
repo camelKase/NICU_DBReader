@@ -2,6 +2,7 @@ package com.example.dbreader_ver1;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.os.Build;
@@ -44,27 +45,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         requestAudioPermissions();
+        initListButton();
 
-        //listenButton = (Button) findViewById(R.id.listenButton);
-        //stopButton = (Button) findViewById(R.id.stopButton);
+        listenButton = (Button) findViewById(R.id.listenButton);
+        stopButton = (Button) findViewById(R.id.stopButton);
         dbText = (TextView) findViewById(R.id.dbText);
 
-        /*Set OnClickListener for Listen Button.
-        listenButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onResume();
-                updateTv();
-            }
-        }); */
-
-        /* Set onClickListener for Stop button.
-        stopButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onPause();
-            }
-        }); */
 
         if (runner == null)
         {
@@ -85,6 +71,17 @@ public class MainActivity extends AppCompatActivity {
             runner.start();
             Log.d("Noise", "start runner()");
         }
+    }
+
+    private void initListButton() {
+        Button ibList = (Button) findViewById(R.id.settingsButton);
+        ibList.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
     }
 
     // Method to request permission for mic recording
@@ -116,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                 == PackageManager.PERMISSION_GRANTED) {
 
             //Go ahead with recording audio now
-            startRecording();
+            //startRecording();
         }
     }
 
@@ -129,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted, yay!
-                    startRecording();
+                    //startRecording();
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
@@ -140,24 +137,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // These methods are used to pause and resume the recorder which is a WIP. Currently they cause the app to crash so they are commented.
-    /*public void onResume()
-    {
-        super.onResume();
+    //Attaches the start recording button to the listen
+    public void listenButton(View v){
         startRecording();
+
     }
-
-    public void onPause()
-    {
-        super.onPause();
-        stopRecorder();
-    }
-    */
-
-
-
     // Initializes media recorder and starts recording.
-    private void startRecording() {
+    public void startRecording() {
 
         if (mRecorder == null) {
             mRecorder = new MediaRecorder();
@@ -185,7 +171,16 @@ public class MainActivity extends AppCompatActivity {
 
     // display the DB level in the textView 'dbText'.
     public void updateTv(){
-        dbText.setText(Double.toString((soundDb())) + " dB");
+
+        if(mRecorder == null) {
+            dbText.setText("- dB");
+        } else {
+            dbText.setText(Double.toString((soundDb())) + " dB");
+        }
+    }
+
+    public void stopButton(View v){
+        stopRecorder();
     }
 
     // stops the media recorder. This is linked to the stop button that is currently not implemented.
@@ -201,13 +196,14 @@ public class MainActivity extends AppCompatActivity {
     // We are reading sound from the device using the MediaRecorder's 'getMaxAmplitude' method. The return of this method is explain in the link above as well.
     public double soundDb(){
 
-        double pressure = getAmplitudeEMA()/51805.5336;
+        double pressure = getAmplitude()/51805.5336;
         double amp1 = 0.00002;
         double Db = 20 * Math.log10(pressure / amp1);
-        if (Db > 50 && alertActive == false)
+
+        // trigger the alert for 70 dB
+        if (Db > 70 && alertActive == false)
             tripAlarm();
         return  Db;
-
     }
 
     public double getAmplitude() {
@@ -217,21 +213,8 @@ public class MainActivity extends AppCompatActivity {
             return 0;
     }
 
-    // I commented out the sound filter that was originally part fo the calculation. Not sure if we need it, but it didn't change the data as much with or without it.
-    public double getAmplitudeEMA() {
-        double amp =  getAmplitude();
-        return amp;
-    }
-
-    public void checkDb(double Db){
-        double currentDb = Db;
-        double maxDb = 50.0;
-        if (currentDb > maxDb)
-            tripAlarm();
-
-
-    }
     public void tripAlarm(){
+
         alertActive = true;
 //        if (Build.VERSION.SDK_INT >= 26) {
 //            ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(150, VibrationEffect.DEFAULT_AMPLITUDE));
@@ -243,17 +226,16 @@ public class MainActivity extends AppCompatActivity {
         builder.setCancelable(false);
         builder.setTitle("Sound Levels Are Too High");
         builder.setMessage(Double.toString((soundDb())) + " dB");
-
-
+        mRecorder.pause();
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-               // alertTextView.setVisibility(View.VISIBLE);
+                // alertTextView.setVisibility(View.VISIBLE);
                 alertActive = false;
+                mRecorder.resume();
             }
         });
         builder.show();
-
     }
 }
