@@ -30,7 +30,12 @@ public class MainActivity extends AppCompatActivity {
 //    public static final String MyPREFERENCES = "MyPrefs" ;
 //    public static final String Threshold = "thresholdKey";
 
+<<<<<<< Updated upstream
     Float userThresh;
+=======
+    public static int calvar;
+
+>>>>>>> Stashed changes
     Button listenButton, stopButton;
     TextView dbText;
     MediaRecorder mRecorder;
@@ -55,8 +60,13 @@ public class MainActivity extends AppCompatActivity {
 
         requestAudioPermissions();
         initListButton();
+<<<<<<< Updated upstream
         SharedPreferences sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         userThresh = sharedPreferences.getFloat(Threshold, 0);
+=======
+        initCallibration();
+
+>>>>>>> Stashed changes
         listenButton = (Button) findViewById(R.id.listenButton);
         stopButton = (Button) findViewById(R.id.stopButton);
         dbText = (TextView) findViewById(R.id.dbText);
@@ -88,6 +98,17 @@ public class MainActivity extends AppCompatActivity {
         ibList.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void initCallibration() {
+        Button ibList = (Button) findViewById(R.id.callibrateButton);
+        ibList.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Callibration.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
@@ -150,7 +171,6 @@ public class MainActivity extends AppCompatActivity {
     //Attaches the start recording button to the listen
     public void listenButton(View v){
         startRecording();
-
     }
     // Initializes media recorder and starts recording.
     public void startRecording() {
@@ -185,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
         if(mRecorder == null) {
             dbText.setText("- dB");
         } else {
-            dbText.setText(Double.toString((soundDb())) + " dB");
+            dbText.setText(Double.toString((soundDb())) + " dB +" + calvar);
         }
     }
 
@@ -208,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
 
         double pressure = getAmplitude()/51805.5336;
         double amp1 = 0.00002;
-        double Db = 20 * Math.log10(pressure / amp1);
+        double Db = 20 * Math.log10(pressure / amp1) + calvar;
 
         // trigger the alert for 70 dB
         if (Db > userThresh && alertActive == false)
