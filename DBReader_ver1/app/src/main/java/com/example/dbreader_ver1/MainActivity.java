@@ -1,8 +1,10 @@
 package com.example.dbreader_ver1;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.os.Build;
@@ -20,8 +22,15 @@ import android.util.Log;
 import android.os.Handler;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+import static com.example.dbreader_ver1.SettingsActivity.MyPREFERENCES;
+import static com.example.dbreader_ver1.SettingsActivity.Threshold;
 
+
+public class MainActivity extends AppCompatActivity {
+//    public static final String MyPREFERENCES = "MyPrefs" ;
+//    public static final String Threshold = "thresholdKey";
+
+    Float userThresh;
     Button listenButton, stopButton;
     TextView dbText;
     MediaRecorder mRecorder;
@@ -46,7 +55,8 @@ public class MainActivity extends AppCompatActivity {
 
         requestAudioPermissions();
         initListButton();
-
+        SharedPreferences sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        userThresh = sharedPreferences.getFloat(Threshold, 0);
         listenButton = (Button) findViewById(R.id.listenButton);
         stopButton = (Button) findViewById(R.id.stopButton);
         dbText = (TextView) findViewById(R.id.dbText);
@@ -200,13 +210,8 @@ public class MainActivity extends AppCompatActivity {
         double amp1 = 0.00002;
         double Db = 20 * Math.log10(pressure / amp1);
 
-        // gets rid of -infinity
-        if (Db < 0) {
-            Db = 0;
-        }
-
         // trigger the alert for 70 dB
-        if (Db > 70 && alertActive == false)
+        if (Db > userThresh && alertActive == false)
             tripAlarm();
         return  Db;
     }
@@ -222,9 +227,9 @@ public class MainActivity extends AppCompatActivity {
 
         alertActive = true;
         if (Build.VERSION.SDK_INT >= 26) {
-            ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(300, 200));
+            ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(150, VibrationEffect.DEFAULT_AMPLITUDE));
         }else {
-            ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(300);
+            ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(150);
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
