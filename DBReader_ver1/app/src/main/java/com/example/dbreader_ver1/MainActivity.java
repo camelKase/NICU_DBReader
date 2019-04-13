@@ -200,6 +200,11 @@ public class MainActivity extends AppCompatActivity {
         double amp1 = 0.00002;
         double Db = 20 * Math.log10(pressure / amp1);
 
+        // gets rid of -infinity
+        if (Db < 0) {
+            Db = 0;
+        }
+
         // trigger the alert for 70 dB
         if (Db > 70 && alertActive == false)
             tripAlarm();
@@ -216,11 +221,11 @@ public class MainActivity extends AppCompatActivity {
     public void tripAlarm(){
 
         alertActive = true;
-//        if (Build.VERSION.SDK_INT >= 26) {
-//            ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(150, VibrationEffect.DEFAULT_AMPLITUDE));
-//        }else {
-//            ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(150);
-//        }
+        if (Build.VERSION.SDK_INT >= 26) {
+            ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(300, 200));
+        }else {
+            ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(300);
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
         builder.setCancelable(false);
