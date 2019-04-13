@@ -11,15 +11,16 @@
         android:layout_width="203dp"
         android:layout_height="108dp"
         android:layout_marginStart="2dp"
-        android:layout_marginTop="622dp"
+        android:layout_marginTop="516dp"
         android:layout_marginEnd="3dp"
-        android:layout_marginBottom="1dp"
+        android:layout_marginBottom="8dp"
         android:onClick="listenButton"
         android:text="Listen"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/stopButton"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/dbText"
@@ -38,15 +39,16 @@
         android:id="@+id/stopButton"
         android:layout_width="203dp"
         android:layout_height="108dp"
-        android:layout_marginTop="622dp"
+        android:layout_marginTop="524dp"
         android:layout_marginEnd="2dp"
-        android:layout_marginBottom="1dp"
+        android:layout_marginBottom="8dp"
         android:onClick="stopButton"
         android:text="Stop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/listenButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/settingsButton"
