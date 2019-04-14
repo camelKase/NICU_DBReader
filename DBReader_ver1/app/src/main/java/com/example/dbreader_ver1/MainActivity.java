@@ -22,7 +22,9 @@ import android.util.Log;
 import android.os.Handler;
 import android.widget.Toast;
 
-import static com.example.dbreader_ver1.SettingsActivity.MyPREFERENCES;
+import static com.example.dbreader_ver1.Callibration.MyPREFERENCES2;
+import static com.example.dbreader_ver1.Callibration.calibration;
+import static com.example.dbreader_ver1.SettingsActivity.MyPREFERENCES1;
 import static com.example.dbreader_ver1.SettingsActivity.Threshold;
 
 
@@ -30,12 +32,11 @@ public class MainActivity extends AppCompatActivity {
 //    public static final String MyPREFERENCES = "MyPrefs" ;
 //    public static final String Threshold = "thresholdKey";
 
-<<<<<<< Updated upstream
-    Float userThresh;
-=======
-    public static int calvar;
 
->>>>>>> Stashed changes
+    // Shared preferences for the threshold level and calibration value.
+    Float userThresh;
+    float userCalibrate;
+
     Button listenButton, stopButton;
     TextView dbText;
     MediaRecorder mRecorder;
@@ -60,13 +61,15 @@ public class MainActivity extends AppCompatActivity {
 
         requestAudioPermissions();
         initListButton();
-<<<<<<< Updated upstream
-        SharedPreferences sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        userThresh = sharedPreferences.getFloat(Threshold, 0);
-=======
+
+        SharedPreferences sharedPreferences1 = getSharedPreferences(MyPREFERENCES1, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences2 = getSharedPreferences(MyPREFERENCES2, Context.MODE_PRIVATE);
+
+        userThresh = sharedPreferences1.getFloat(Threshold, 0);
+        userCalibrate = sharedPreferences2.getFloat(calibration,0);
+
         initCallibration();
 
->>>>>>> Stashed changes
         listenButton = (Button) findViewById(R.id.listenButton);
         stopButton = (Button) findViewById(R.id.stopButton);
         dbText = (TextView) findViewById(R.id.dbText);
@@ -81,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                     {
                         try
                         {
-                            Thread.sleep(1000);
+                            Thread.sleep(250);
                             Log.i("Noise", "Tock");
                         } catch (InterruptedException e) { };
                         mHandler.post(updater);
@@ -205,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
         if(mRecorder == null) {
             dbText.setText("- dB");
         } else {
-            dbText.setText(Double.toString((soundDb())) + " dB +" + calvar);
+            dbText.setText(Double.toString((soundDb())) + " dB. Calibration: " + userCalibrate);
         }
     }
 
@@ -228,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
 
         double pressure = getAmplitude()/51805.5336;
         double amp1 = 0.00002;
-        double Db = 20 * Math.log10(pressure / amp1) + calvar;
+        double Db = 20 * Math.log10(pressure / amp1) + userCalibrate;
 
         // trigger the alert for 70 dB
         if (Db > userThresh && alertActive == false)

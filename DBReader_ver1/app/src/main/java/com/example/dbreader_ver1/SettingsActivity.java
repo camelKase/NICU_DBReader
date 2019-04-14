@@ -16,11 +16,10 @@ public class SettingsActivity extends AppCompatActivity {
 
     EditText thresholdValue;
     TextView currentValue;
-    public static final String MyPREFERENCES = "MyPrefs" ;
+
+    public static final String MyPREFERENCES1 = "MyPrefs" ;
     public static final String Threshold = "thresholdKey";
-
     SharedPreferences sharedPreferences;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +29,7 @@ public class SettingsActivity extends AppCompatActivity {
         currentValue=findViewById(R.id.currentThresh);
         thresholdValue=findViewById(R.id.thresholdText);
         Button save = findViewById(R.id.saveButton);
-        sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-
+        sharedPreferences = getSharedPreferences(MyPREFERENCES1, Context.MODE_PRIVATE);
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,9 +37,6 @@ public class SettingsActivity extends AppCompatActivity {
                 saveThresholdPreference();
             }
         });
-
-
-
         back();
     }
 
