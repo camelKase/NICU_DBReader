@@ -22,7 +22,7 @@ import android.util.Log;
 import android.os.Handler;
 import android.widget.Toast;
 
-import static com.example.dbreader_ver1.Callibration.MyPREFERENCES2;
+//import static com.example.dbreader_ver1.Callibration.MyPREFERENCES2;
 import static com.example.dbreader_ver1.Callibration.calibration;
 import static com.example.dbreader_ver1.SettingsActivity.MyPREFERENCES1;
 import static com.example.dbreader_ver1.SettingsActivity.Threshold;
@@ -63,10 +63,10 @@ public class MainActivity extends AppCompatActivity {
         initListButton();
 
         SharedPreferences sharedPreferences1 = getSharedPreferences(MyPREFERENCES1, Context.MODE_PRIVATE);
-        SharedPreferences sharedPreferences2 = getSharedPreferences(MyPREFERENCES2, Context.MODE_PRIVATE);
+        //SharedPreferences sharedPreferences2 = getSharedPreferences(MyPREFERENCES2, Context.MODE_PRIVATE);
 
         userThresh = sharedPreferences1.getFloat(Threshold, 0);
-        userCalibrate = sharedPreferences2.getFloat(calibration,0);
+        userCalibrate = sharedPreferences1.getFloat(calibration,0);
 
         initCallibration();
 

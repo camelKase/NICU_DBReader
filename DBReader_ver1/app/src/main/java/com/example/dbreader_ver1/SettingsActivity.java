@@ -13,13 +13,16 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class SettingsActivity extends AppCompatActivity {
-
+    Float userThresh;
     EditText thresholdValue;
     TextView currentValue;
+
 
     public static final String MyPREFERENCES1 = "MyPrefs" ;
     public static final String Threshold = "thresholdKey";
     SharedPreferences sharedPreferences;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +33,8 @@ public class SettingsActivity extends AppCompatActivity {
         thresholdValue=findViewById(R.id.thresholdText);
         Button save = findViewById(R.id.saveButton);
         sharedPreferences = getSharedPreferences(MyPREFERENCES1, Context.MODE_PRIVATE);
+        userThresh = sharedPreferences.getFloat(Threshold, 0);
+        currentValue.setText(userThresh.toString() + " dB");
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -14,11 +14,13 @@ import android.widget.TextView;
 
 public class Callibration extends AppCompatActivity {
     int minteger = 0;
-    TextView textView2;
+    TextView textView2, currentCal;
     Button saveButton;
+    Float userCal;
+    //TextView currentValue;
 
     SharedPreferences sharedPreferences;
-    public static final String MyPREFERENCES2 = "MyPrefs" ;
+    public static final String MyPREFERENCES1 = "MyPrefs" ;
     public static final String calibration = "CalibrationKey";
 
     @Override
@@ -26,9 +28,13 @@ public class Callibration extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_callibration);
         textView2 = findViewById(R.id.textView2);
-        saveButton = (Button) findViewById(R.id.saveButton);
-        sharedPreferences = getSharedPreferences(MyPREFERENCES2, Context.MODE_PRIVATE);
+        currentCal = findViewById(R.id.integer_number);
 
+        saveButton = (Button) findViewById(R.id.saveButton);
+        sharedPreferences = getSharedPreferences(MyPREFERENCES1, Context.MODE_PRIVATE);
+        userCal = sharedPreferences.getFloat(calibration, 0);
+        currentCal.setText(userCal.toString());
+        minteger = userCal.intValue();
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
