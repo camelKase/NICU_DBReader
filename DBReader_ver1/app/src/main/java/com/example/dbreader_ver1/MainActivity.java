@@ -22,6 +22,9 @@ import android.util.Log;
 import android.os.Handler;
 import android.widget.Toast;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+
 //import static com.example.dbreader_ver1.Callibration.MyPREFERENCES2;
 import static com.example.dbreader_ver1.Callibration.calibration;
 import static com.example.dbreader_ver1.SettingsActivity.MyPREFERENCES1;
@@ -36,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     // Shared preferences for the threshold level and calibration value.
     Float userThresh;
     float userCalibrate;
+
+    private static DecimalFormat df = new DecimalFormat("0.00");
 
     Button listenButton, stopButton;
     TextView dbText;
@@ -217,10 +222,13 @@ public class MainActivity extends AppCompatActivity {
     // display the DB level in the textView 'dbText'.
     public void updateTv(){
 
+        double dbLevel = soundDb();
+
         if(mRecorder == null) {
             dbText.setText("- dB");
         } else {
-            dbText.setText(Double.toString((soundDb())) + " dB. Calibration: " + userCalibrate);
+            dbText.setText(df.format(dbLevel) + " dB");
+            //Calibration: " + userCalibrate);
         }
     }
 
@@ -245,9 +253,9 @@ public class MainActivity extends AppCompatActivity {
         double amp1 = 0.00002;
         double Db = 20 * Math.log10(pressure / amp1) + userCalibrate;
 
-        // trigger the alert for 70 dB
+        // trigger the alert.
         if (Db > userThresh && alertActive == false)
-            tripAlarm();
+            tripAlarm(Db);
         return  Db;
     }
 
@@ -258,9 +266,10 @@ public class MainActivity extends AppCompatActivity {
             return 0;
     }
 
-    public void tripAlarm(){
+    public void tripAlarm(double Db){
 
         alertActive = true;
+        mRecorder.pause();
         if (Build.VERSION.SDK_INT >= 26) {
             ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(150, VibrationEffect.DEFAULT_AMPLITUDE));
         }else {
@@ -270,8 +279,8 @@ public class MainActivity extends AppCompatActivity {
 
         builder.setCancelable(false);
         builder.setTitle("Sound Levels Are Too High");
-        builder.setMessage(Double.toString((soundDb())) + " dB");
-        mRecorder.pause();
+        builder.setMessage((df.format(Db)) + " dB");
+
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
