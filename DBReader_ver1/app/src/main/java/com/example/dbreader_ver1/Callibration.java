@@ -72,6 +72,7 @@ public class Callibration extends AppCompatActivity {
         editor.putFloat(calibration, n);
         editor.apply();
     }
+
     private void back() {
         Button ibList = findViewById(R.id.backButton);
         ibList.setOnClickListener(new View.OnClickListener() {

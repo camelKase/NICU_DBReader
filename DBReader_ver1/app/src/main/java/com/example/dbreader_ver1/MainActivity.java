@@ -103,6 +103,9 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+
+                // Calling the stopRecorder method to allow re-initialization of the mRecorder when you return to the main page and tap Listen.
+                stopRecorder();
             }
         });
     }
@@ -114,6 +117,9 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, Callibration.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+
+                // Calling the stopRecorder method to allow re-initialization of the mRecorder when you return to the main page and tap Listen.
+                stopRecorder();
             }
         });
     }
@@ -173,7 +179,12 @@ public class MainActivity extends AppCompatActivity {
 
     //Attaches the start recording button to the listen
     public void listenButton(View v){
-        startRecording();
+        if (mRecorder == null) {
+            startRecording();
+        } else {
+            mRecorder.resume();
+        }
+
     }
     // Initializes media recorder and starts recording.
     public void startRecording() {
@@ -200,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
         }catch (java.lang.SecurityException e) {
             android.util.Log.e("[Monkey]", "SecurityException: " + android.util.Log.getStackTraceString(e));
         }
+
     }
 
     // display the DB level in the textView 'dbText'.
