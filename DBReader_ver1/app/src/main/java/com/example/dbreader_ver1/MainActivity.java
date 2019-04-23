@@ -1,8 +1,10 @@
 package com.example.dbreader_ver1;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.os.Build;
@@ -20,7 +22,25 @@ import android.util.Log;
 import android.os.Handler;
 import android.widget.Toast;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+
+//import static com.example.dbreader_ver1.Callibration.MyPREFERENCES2;
+import static com.example.dbreader_ver1.Callibration.calibration;
+import static com.example.dbreader_ver1.SettingsActivity.MyPREFERENCES1;
+import static com.example.dbreader_ver1.SettingsActivity.Threshold;
+
+
 public class MainActivity extends AppCompatActivity {
+//    public static final String MyPREFERENCES = "MyPrefs" ;
+//    public static final String Threshold = "thresholdKey";
+
+
+    // Shared preferences for the threshold level and calibration value.
+    Float userThresh;
+    float userCalibrate;
+
+    private static DecimalFormat df = new DecimalFormat("0.00");
 
     Button listenButton, stopButton;
     TextView dbText;
@@ -47,6 +67,14 @@ public class MainActivity extends AppCompatActivity {
         requestAudioPermissions();
         initListButton();
 
+        SharedPreferences sharedPreferences1 = getSharedPreferences(MyPREFERENCES1, Context.MODE_PRIVATE);
+        //SharedPreferences sharedPreferences2 = getSharedPreferences(MyPREFERENCES2, Context.MODE_PRIVATE);
+
+        userThresh = sharedPreferences1.getFloat(Threshold, 0);
+        userCalibrate = sharedPreferences1.getFloat(calibration,0);
+
+        initCallibration();
+
         listenButton = (Button) findViewById(R.id.listenButton);
         stopButton = (Button) findViewById(R.id.stopButton);
         dbText = (TextView) findViewById(R.id.dbText);
@@ -61,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                     {
                         try
                         {
-                            Thread.sleep(1000);
+                            Thread.sleep(250);
                             Log.i("Noise", "Tock");
                         } catch (InterruptedException e) { };
                         mHandler.post(updater);
@@ -80,6 +108,23 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+
+                // Calling the stopRecorder method to allow re-initialization of the mRecorder when you return to the main page and tap Listen.
+                stopRecorder();
+            }
+        });
+    }
+
+    private void initCallibration() {
+        Button ibList = (Button) findViewById(R.id.callibrateButton);
+        ibList.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Callibration.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+
+                // Calling the stopRecorder method to allow re-initialization of the mRecorder when you return to the main page and tap Listen.
+                stopRecorder();
             }
         });
     }
@@ -139,7 +184,11 @@ public class MainActivity extends AppCompatActivity {
 
     //Attaches the start recording button to the listen
     public void listenButton(View v){
-        startRecording();
+        if (mRecorder == null) {
+            startRecording();
+        } else {
+            mRecorder.resume();
+        }
 
     }
     // Initializes media recorder and starts recording.
@@ -167,15 +216,19 @@ public class MainActivity extends AppCompatActivity {
         }catch (java.lang.SecurityException e) {
             android.util.Log.e("[Monkey]", "SecurityException: " + android.util.Log.getStackTraceString(e));
         }
+
     }
 
     // display the DB level in the textView 'dbText'.
     public void updateTv(){
 
+        double dbLevel = soundDb();
+
         if(mRecorder == null) {
             dbText.setText("- dB");
         } else {
-            dbText.setText(Double.toString((soundDb())) + " dB");
+            dbText.setText(df.format(dbLevel) + " dB");
+            //Calibration: " + userCalibrate);
         }
     }
 
@@ -198,11 +251,11 @@ public class MainActivity extends AppCompatActivity {
 
         double pressure = getAmplitude()/51805.5336;
         double amp1 = 0.00002;
-        double Db = 20 * Math.log10(pressure / amp1);
+        double Db = 20 * Math.log10(pressure / amp1) + userCalibrate;
 
-        // trigger the alert for 70 dB
-        if (Db > 70 && alertActive == false)
-            tripAlarm();
+        // trigger the alert.
+        if (Db > userThresh && alertActive == false)
+            tripAlarm(Db);
         return  Db;
     }
 
@@ -213,20 +266,21 @@ public class MainActivity extends AppCompatActivity {
             return 0;
     }
 
-    public void tripAlarm(){
+    public void tripAlarm(double Db){
 
         alertActive = true;
-//        if (Build.VERSION.SDK_INT >= 26) {
-//            ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(150, VibrationEffect.DEFAULT_AMPLITUDE));
-//        }else {
-//            ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(150);
-//        }
+        mRecorder.pause();
+        if (Build.VERSION.SDK_INT >= 26) {
+            ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(150, VibrationEffect.DEFAULT_AMPLITUDE));
+        }else {
+            ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(150);
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
         builder.setCancelable(false);
         builder.setTitle("Sound Levels Are Too High");
-        builder.setMessage(Double.toString((soundDb())) + " dB");
-        mRecorder.pause();
+        builder.setMessage((df.format(Db)) + " dB");
+
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
