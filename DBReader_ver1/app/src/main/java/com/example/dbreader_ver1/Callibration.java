@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Callibration extends AppCompatActivity {
     int minteger = 0;
@@ -35,13 +36,7 @@ public class Callibration extends AppCompatActivity {
         userCal = sharedPreferences.getFloat(calibration, 0);
         currentCal.setText(userCal.toString());
         minteger = userCal.intValue();
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // inputting the save preference method here.
-                saveCalibrationPreference(minteger);
-            }
-        });
+
 
         back();
     }
@@ -71,6 +66,8 @@ public class Callibration extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putFloat(calibration, n);
         editor.apply();
+        Toast.makeText(this,
+                "Calibration Set to " + minteger, Toast.LENGTH_SHORT).show();
     }
 
     private void back() {
