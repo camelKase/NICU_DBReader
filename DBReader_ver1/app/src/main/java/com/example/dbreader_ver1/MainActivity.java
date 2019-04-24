@@ -307,7 +307,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 alertActive = false;
-                mRecorder.pause();
+                stopRecorder();
+                //mRecorder.pause();
             }
         });
         builder.show();
