@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
             runner.start();
             Log.d("Noise", "start runner()");
         }
-        notificationManager = NotificationManagerCompat.from(this);
+
 
 
     }
@@ -319,7 +319,7 @@ public class MainActivity extends AppCompatActivity {
         //Get the pending intent containing the entire backstack
         PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
 
-        message = "Sound Levels Are too High";
+
 
         Notification notification = new NotificationCompat.Builder(this,CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_android)
@@ -330,6 +330,9 @@ public class MainActivity extends AppCompatActivity {
                 .setContentIntent(pendingIntent)
                 .build();
 
+
+
+                notificationManager = NotificationManagerCompat.from(this);
                 notificationManager.notify(1,notification);
 
     }
