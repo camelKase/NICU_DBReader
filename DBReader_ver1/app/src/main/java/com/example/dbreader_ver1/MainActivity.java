@@ -107,9 +107,6 @@ public class MainActivity extends AppCompatActivity {
             runner.start();
             Log.d("Noise", "start runner()");
         }
-
-
-
     }
 
     private void initListButton() {

@@ -4,6 +4,7 @@ package com.example.dbreader_ver1;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -21,8 +22,6 @@ public class SettingsActivity extends AppCompatActivity {
     public static final String MyPREFERENCES1 = "MyPrefs" ;
     public static final String Threshold = "thresholdKey";
     SharedPreferences sharedPreferences;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +46,18 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void saveThresholdPreference() {
         Float t  = Float.valueOf(thresholdValue.getText().toString());
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putFloat(Threshold, t);
-        editor.apply();
+        if (t == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
+            builder.setCancelable(false);
+            builder.setTitle("Invalid Threshold Value.");
+            builder.setMessage("Please enter a number in the Threshold field.");
+        } else {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putFloat(Threshold, t);
+            editor.apply();
 
-        currentValue.setText(t.toString());
+            currentValue.setText(t.toString());
+        }
 
     }
 
