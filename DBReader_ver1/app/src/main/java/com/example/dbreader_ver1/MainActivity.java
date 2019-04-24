@@ -2,10 +2,7 @@ package com.example.dbreader_ver1;
 
 import android.Manifest;
 import android.app.Notification;
-<<<<<<< HEAD
 import android.app.PendingIntent;
-=======
->>>>>>> 5cd6f62c21b5f66cecc1366b9b147893b93e0ed6
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,10 +15,7 @@ import android.os.Vibrator;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-<<<<<<< HEAD
 import android.support.v4.app.TaskStackBuilder;
-=======
->>>>>>> 5cd6f62c21b5f66cecc1366b9b147893b93e0ed6
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -313,7 +307,6 @@ public class MainActivity extends AppCompatActivity {
 
         //Show the notification if the noise levels get too loud in the foreground
         String title = "Sound Meter";
-<<<<<<< HEAD
         String message = "Sound levels are too high";
 
         //Created an Intent for Main Activity
@@ -326,9 +319,7 @@ public class MainActivity extends AppCompatActivity {
         //Get the pending intent containing the entire backstack
         PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
 
-=======
-        String message = "Sound Levels Are too High";
->>>>>>> 5cd6f62c21b5f66cecc1366b9b147893b93e0ed6
+        message = "Sound Levels Are too High";
 
         Notification notification = new NotificationCompat.Builder(this,CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_android)
@@ -336,22 +327,11 @@ public class MainActivity extends AppCompatActivity {
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
-<<<<<<< HEAD
                 .setContentIntent(pendingIntent)
-=======
->>>>>>> 5cd6f62c21b5f66cecc1366b9b147893b93e0ed6
                 .build();
 
                 notificationManager.notify(1,notification);
 
-
-
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> 5cd6f62c21b5f66cecc1366b9b147893b93e0ed6
     }
 
     public void startService(View v){
