@@ -1,6 +1,7 @@
 package com.example.dbreader_ver1;
 
 import android.Manifest;
+import android.app.Notification;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +12,8 @@ import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +29,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 //import static com.example.dbreader_ver1.Callibration.MyPREFERENCES2;
+import static com.example.dbreader_ver1.App.CHANNEL_ID;
 import static com.example.dbreader_ver1.Callibration.calibration;
 import static com.example.dbreader_ver1.SettingsActivity.MyPREFERENCES1;
 import static com.example.dbreader_ver1.SettingsActivity.Threshold;
@@ -34,6 +38,8 @@ import static com.example.dbreader_ver1.SettingsActivity.Threshold;
 public class MainActivity extends AppCompatActivity {
 //    public static final String MyPREFERENCES = "MyPrefs" ;
 //    public static final String Threshold = "thresholdKey";
+
+    private NotificationManagerCompat notificationManager;
 
 
     // Shared preferences for the threshold level and calibration value.
@@ -99,6 +105,9 @@ public class MainActivity extends AppCompatActivity {
             runner.start();
             Log.d("Noise", "start runner()");
         }
+        notificationManager = NotificationManagerCompat.from(this);
+
+
     }
 
     private void initListButton() {
@@ -282,6 +291,8 @@ public class MainActivity extends AppCompatActivity {
         builder.setMessage((df.format(Db)) + " dB");
 
 
+
+
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -291,5 +302,38 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         builder.show();
+
+        //Show the notification if the noise levels get too loud in the foreground
+        String title = "Sound Meter";
+        String message = "Sound Levels Are too High";
+
+        Notification notification = new NotificationCompat.Builder(this,CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_android)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
+                .build();
+
+                notificationManager.notify(1,notification);
+
+
+
+    }
+
+    public void startService(View v){
+        double lb  = soundDb();
+
+        Intent serviceIntent = new Intent(this, serviceClass.class);
+       serviceIntent.putExtra("input" , lb);
+
+        startService(serviceIntent);
+
+    }
+    public void stopService(){
+        Intent serviceIntent = new Intent(this, serviceClass.class);
+        stopService(serviceIntent);
+
+
     }
 }
