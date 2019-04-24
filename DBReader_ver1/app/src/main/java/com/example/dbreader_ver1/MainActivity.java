@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     // Shared preferences for the threshold level and calibration value.
-    Float userThresh;
+    float userThresh;
     float userCalibrate;
 
     private static DecimalFormat df = new DecimalFormat("0.00");
@@ -293,14 +293,21 @@ public class MainActivity extends AppCompatActivity {
         builder.setMessage((df.format(Db)) + " dB");
 
 
-
-
+        // OK and STOP buttons for the in-app alert popup.
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 // alertTextView.setVisibility(View.VISIBLE);
                 alertActive = false;
                 mRecorder.resume();
+            }
+        });
+
+        builder.setNegativeButton("STOP", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                alertActive = false;
+                mRecorder.pause();
             }
         });
         builder.show();
@@ -349,7 +356,6 @@ public class MainActivity extends AppCompatActivity {
     public void stopService(){
         Intent serviceIntent = new Intent(this, serviceClass.class);
         stopService(serviceIntent);
-
-
+        
     }
 }

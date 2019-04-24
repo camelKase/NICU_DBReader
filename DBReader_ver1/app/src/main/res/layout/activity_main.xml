@@ -75,14 +75,14 @@
         android:layout_marginTop="46dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:text="@string/callibrate"
+        android:text="@string/calibrate"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/settingsButton"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.006"
-        tools:text="@string/callibrate" />
+        tools:text="@string/calibrate" />
 
 
 </android.support.constraint.ConstraintLayout>
