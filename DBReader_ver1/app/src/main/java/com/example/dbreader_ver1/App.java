@@ -1,4 +1,3 @@
-
 package com.example.dbreader_ver1;
 
 import android.app.Application;
@@ -40,3 +39,5 @@ private void createNotificationChannel(){
 
 }
 }
+
+

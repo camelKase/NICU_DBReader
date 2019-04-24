@@ -33,10 +33,9 @@ public class SettingsActivity extends AppCompatActivity {
         thresholdValue=findViewById(R.id.thresholdText);
         Button save = findViewById(R.id.saveButton);
         sharedPreferences = getSharedPreferences(MyPREFERENCES1, Context.MODE_PRIVATE);
-        // Set default threshold to 90
-        userThresh = sharedPreferences.getFloat(Threshold, 90);
+        userThresh = sharedPreferences.getFloat(Threshold, 0);
         currentValue.setText(userThresh.toString() + " dB");
-        initDefault(userThresh);
+
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,13 +43,6 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
         back();
-    }
-
-    private void initDefault(Float userThresh) {
-
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putFloat(Threshold, userThresh);
-        editor.apply();
     }
 
     private void saveThresholdPreference() {

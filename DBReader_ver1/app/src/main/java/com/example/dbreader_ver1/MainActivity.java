@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     // Shared preferences for the threshold level and calibration value.
-    float userThresh;
+    Float userThresh;
     float userCalibrate;
 
     private static DecimalFormat df = new DecimalFormat("0.00");
@@ -293,7 +293,8 @@ public class MainActivity extends AppCompatActivity {
         builder.setMessage((df.format(Db)) + " dB");
 
 
-        // OK and STOP buttons for the in-app alert popup.
+
+
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -302,34 +303,31 @@ public class MainActivity extends AppCompatActivity {
                 mRecorder.resume();
             }
         });
-
-        builder.setNegativeButton("STOP", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                alertActive = false;
-                stopRecorder();
-                //mRecorder.pause();
-            }
-        });
         builder.show();
 
         //Show the notification if the noise levels get too loud in the foreground
         String title = "Sound Meter";
         String message = "Sound levels are too high";
 
+
+
+
+        /*
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        */
+
+        NotificationCompat.Builder notificationCompatBuilder =
+                new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID);
+
         //Created an Intent for Main Activity
         Intent intent = new Intent(this, MainActivity.class);
-
-        //Creates Taskbuilder and add the MainActivity intent, which inflates the back stack
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addNextIntentWithParentStack(intent);
-
-        //Get the pending intent containing the entire backstack
-        PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
+        intent.setAction("android.intent.action.MAIN");
+        intent.addCategory("android.intent.category.LAUNCHER");
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
-
-        Notification notification = new NotificationCompat.Builder(this,CHANNEL_ID)
+        notificationCompatBuilder
                 .setSmallIcon(R.drawable.ic_android)
                 .setContentTitle(title)
                 .setContentText(message)
@@ -338,10 +336,28 @@ public class MainActivity extends AppCompatActivity {
                 .setContentIntent(pendingIntent)
                 .build();
 
+        Notification notification = notificationCompatBuilder.build();
 
+        notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(1,notification);
+
+
+       /* Notification notification = new NotificationCompat.Builder(this,CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_android)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
+                .setContentIntent(pendingIntent)
+                .build();
 
                 notificationManager = NotificationManagerCompat.from(this);
                 notificationManager.notify(1,notification);
+*/
+
+
+
+
 
     }
 
@@ -357,6 +373,7 @@ public class MainActivity extends AppCompatActivity {
     public void stopService(){
         Intent serviceIntent = new Intent(this, serviceClass.class);
         stopService(serviceIntent);
-        
+
+
     }
 }

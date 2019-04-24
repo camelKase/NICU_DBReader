@@ -114,6 +114,10 @@ public class serviceClass extends Service{
         //startForeground();
 
 
+
+
+
+
         }
 
     public int onStartCommand(Intent intent, int flags, int startId){
@@ -143,4 +147,3 @@ public class serviceClass extends Service{
 
 
 }
-
