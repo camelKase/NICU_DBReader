@@ -297,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 // alertTextView.setVisibility(View.VISIBLE);
                 alertActive = false;
-                mRecorder.resume();
+                mRecorder.pause();
             }
         });
         builder.show();

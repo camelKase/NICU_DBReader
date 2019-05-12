@@ -28,6 +28,8 @@
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="#3700B3"
+        android:background="@drawable/custom_button1"
         android:layout_marginStart="161dp"
         android:layout_marginTop="52dp"
         android:layout_marginEnd="162dp"
@@ -40,6 +42,8 @@
 
     <Button
         android:id="@+id/backButton"
+        android:textColor="#3700B3"
+        android:background="@drawable/custom_button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="162dp"

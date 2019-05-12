@@ -6,4 +6,6 @@
     <string name="back">back</string>
     <string name="save">save</string>
     <string name="callibrate">Callibrate</string>
+    <string name="stop">Stop</string>
+    <string name="listen">Listen</string>
 </resources>

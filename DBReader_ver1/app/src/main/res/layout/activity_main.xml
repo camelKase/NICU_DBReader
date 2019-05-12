@@ -8,19 +8,21 @@
 
     <Button
         android:id="@+id/listenButton"
-        android:layout_width="203dp"
-        android:layout_height="108dp"
+        android:layout_width="130dp"
+        android:layout_height="50dp"
         android:layout_marginStart="2dp"
         android:layout_marginTop="516dp"
         android:layout_marginEnd="3dp"
         android:layout_marginBottom="8dp"
+        android:background="@drawable/custom_button1"
         android:onClick="listenButton"
-        android:text="Listen"
+        android:text="@string/listen"
+        android:textColor="#3700B3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/stopButton"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.611" />
 
     <TextView
         android:id="@+id/dbText"
@@ -38,21 +40,24 @@
 
     <Button
         android:id="@+id/stopButton"
-        android:layout_width="203dp"
-        android:layout_height="108dp"
+        android:layout_width="130dp"
+        android:layout_height="50dp"
         android:layout_marginTop="524dp"
         android:layout_marginEnd="2dp"
         android:layout_marginBottom="8dp"
+        android:background="@drawable/custom_button1"
         android:onClick="stopButton"
-        android:text="Stop"
+        android:text="@string/stop"
+        android:textColor="#3700B3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/listenButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.59" />
 
     <Button
         android:id="@+id/settingsButton"
+        android:textColor="#3700B3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="288dp"
@@ -60,6 +65,7 @@
         android:layout_marginEnd="34dp"
         android:layout_marginBottom="8dp"
         android:text="Settings"
+        android:background="@drawable/custom_button1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -69,12 +75,14 @@
 
     <Button
         android:id="@+id/callibrateButton"
+        android:background="@drawable/custom_button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="34dp"
         android:layout_marginTop="46dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:textColor="#3700B3"
         android:text="@string/callibrate"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/settingsButton"
