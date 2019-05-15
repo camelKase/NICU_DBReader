@@ -43,19 +43,16 @@ public class serviceClass extends Service{
             mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
             mRecorder.setOutputFile("/dev/null");
         }
-        try
-        {
+        try {
             mRecorder.prepare();
-        }catch (java.io.IOException ioe) {
+        } catch (java.io.IOException ioe) {
             android.util.Log.e("[Monkey]", "IOException: " + android.util.Log.getStackTraceString(ioe));
 
-        }catch (java.lang.SecurityException e) {
+        } catch (java.lang.SecurityException e) {
             android.util.Log.e("[Monkey]", "SecurityException: " + android.util.Log.getStackTraceString(e));
-        }
-        try
-        {
+        } try {
             mRecorder.start();
-        }catch (java.lang.SecurityException e) {
+        } catch (java.lang.SecurityException e) {
             android.util.Log.e("[Monkey]", "SecurityException: " + android.util.Log.getStackTraceString(e));
         }
 
@@ -111,34 +108,19 @@ public class serviceClass extends Service{
     @Override
     public void onCreate() {
         super.onCreate();
-        //startForeground();
 
-
-
-
-
-
-        }
-
-    public int onStartCommand(Intent intent, int flags, int startId){
-
-        // do your jobs here
-        startRecording();
-        soundDb();
-
-
-
-        return super.onStartCommand(intent, flags, startId);
     }
 
-
-
+    public int onStartCommand(Intent intent, int flags, int startId){
+        startRecording();
+        soundDb();
+        return super.onStartCommand(intent, flags, startId);
+    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        }
+    }
 
     public IBinder onBind(Intent intent){
         return null;

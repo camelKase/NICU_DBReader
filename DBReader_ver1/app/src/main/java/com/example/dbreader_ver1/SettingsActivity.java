@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SettingsActivity extends AppCompatActivity {
     Float userThresh;
@@ -45,13 +46,12 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void saveThresholdPreference() {
-        Float t  = Float.valueOf(thresholdValue.getText().toString());
-        if (t == null) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
-            builder.setCancelable(false);
-            builder.setTitle("Invalid Threshold Value.");
-            builder.setMessage("Please enter a number in the Threshold field.");
+        String input = thresholdValue.getText().toString();
+        if (input.matches("")) {
+            Toast.makeText(this, "You did not enter a Threshold level", Toast.LENGTH_SHORT).show();
+            return;
         } else {
+            Float t  = Float.valueOf(thresholdValue.getText().toString());
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putFloat(Threshold, t);
             editor.apply();
